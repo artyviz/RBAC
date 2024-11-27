@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL="postgresql://farhan@localhost:5432/attendance_system"
+")
+}
+
+model Department {
+  id        Int      @id @default(autoincrement())
+  name      String
+  faculty   Faculty[]
+  students  Student[]
+}
+
+model Faculty {
+  id              Int      @id @default(autoincrement())
+  name            String
+  subject         String
+  yearsOfService  Int
+  departmentId    Int
+  department      Department @relation(fields: [departmentId], references: [id])
+}
+
+model Student {
+  id            Int      @id @default(autoincrement())
+  name          String
+  departmentId  Int
+  department    Department @relation(fields: [departmentId], references: [id])
+  attendance    Attendance[]
+  grades        Grade[]
+}
+
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  present   Boolean
+  studentId Int
+  student   Student  @relation(fields: [studentId], references: [id])
+}
+
+model Grade {
+  id        Int      @id @default(autoincrement())
+  subject   String
+  score     Float
+  studentId Int
+  student   Student  @relation(fields: [studentId], references: [id])
+}
+
